@@ -1,0 +1,2808 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Courier+Prime&display=swap');
+
+/* 
+ * ===== VARIABLES & AESTHETIC ===== 
+ * Defines the core color palette, typography, and standard visual effects 
+ * used throughout the site to maintain the dark academia / archival theme.
+ * Uses CSS custom properties (--var) for consistent theming.
+ */
+:root {
+    --bg-dark: #12100e;
+    --bg-paper: #2a241f;
+    --bg-parchment: #e8dcca;
+    --text-primary: #d4c5b0;
+    --text-secondary: #a39178;
+    --text-dark: #2c241b;
+    --accent-gold: #c5a059;
+    --accent-gold-hover: #e0bb75;
+    --accent-crimson: #6b2d28;
+    --accent-crimson-hover: #863a34;
+
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Cormorant Garamond', serif;
+    --font-mono: 'Courier Prime', monospace;
+
+    --shadow-deep: 0 10px 30px rgba(0, 0, 0, 0.8);
+    --shadow-inset: inset 0 0 50px rgba(0, 0, 0, 0.7);
+    --border-ornate: 1px solid rgba(197, 160, 89, 0.3);
+}
+
+/* 
+ * Base Page Texture & Typography 
+ * Applies the core dark background, global noise texture layer (via SVG data URI),
+ * and establishes the default serif font family and sizing for the entire document.
+ */
+body {
+    margin: 0;
+    font-size: x-large;
+    font-weight: 900;
+    font-family: var(--font-body);
+    background-color: var(--bg-dark);
+    /* SVG Noise Texture for the background */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E"),
+        radial-gradient(circle at center, #24201c 0%, #0d0b0a 100%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    color: var(--accent-gold);
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+/* These are decorative images like statues and butterflies that sit in the background */
+.collage-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.collage-item {
+    position: absolute;
+    mix-blend-mode: multiply;
+    filter: contrast(1.1) sepia(0.6) opacity(0.6);
+    transition: transform 1s ease-out;
+}
+
+.collage-statue {
+    bottom: -5vh;
+    left: -5vw;
+    width: clamp(200px, 40vw, 450px);
+    transform: rotate(-5deg);
+}
+
+.collage-hands {
+    top: 15vh;
+    right: -10vw;
+    width: clamp(300px, 50vw, 600px);
+    transform: rotate(10deg);
+}
+
+.collage-butterfly {
+    top: 10vh;
+    left: 15vw;
+    width: clamp(150px, 25vw, 300px);
+    transform: rotate(-15deg);
+    opacity: 0.4;
+}
+
+/* Parallax hover effect for collage elements */
+body:hover .collage-statue {
+    transform: rotate(-5deg) translate(5px, -5px);
+}
+
+body:hover .collage-hands {
+    transform: rotate(10deg) translate(-10px, 5px);
+}
+
+body:hover .collage-butterfly {
+    transform: rotate(-12deg) translate(15px, 10px);
+}
+
+/* 
+ * ===== LANDING PAGE ===== 
+ * Layout and styling specifically for the initial entry view (index.html).
+ * Uses Flexbox to center the main title and entry button within the viewport.
+ */
+.landing {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Controls the look of the big statues on the landing page */
+.landing-deco {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.landing-deco img {
+    width: clamp(400px, 55vw, 680px);
+    height: auto;
+    filter: sepia(0.25) contrast(1.1) brightness(1.05) drop-shadow(0 0 30px rgba(197, 160, 89, 0.45)) drop-shadow(0 25px 40px rgba(0, 0, 0, 0.7));
+    transition: filter 0.5s ease;
+}
+
+.landing-deco img:hover {
+    filter: sepia(0.1) contrast(1.15) brightness(1.12) drop-shadow(0 0 50px rgba(197, 160, 89, 0.7)) drop-shadow(0 25px 40px rgba(0, 0, 0, 0.7));
+}
+
+.start-top {
+    top: 3vh;
+    /* Lowered further from -2vh */
+    left: -3vw;
+    animation: slideDown 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
+        floatStatue 6s ease-in-out 2.2s infinite;
+}
+
+.start-bottom {
+    bottom: -12vh;
+    right: -1vw;
+    animation: slideUp 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
+        floatStatueReverse 7s ease-in-out 2.2s infinite;
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translateY(-100vh);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 0.5;
+        /* Defined transparency */
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 0.5;
+        /* Defined transparency */
+    }
+}
+
+/* Exit Animations */
+.start-top.is-exiting {
+    animation: none !important;
+    /* Kill the floating animation to allow horizontal slide */
+    transform: translateX(-100vw) !important;
+    opacity: 0 !important;
+    transition: all 1s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.start-bottom.is-exiting {
+    animation: none !important;
+    /* Kill the floating animation to allow horizontal slide */
+    transform: translateX(100vw) !important;
+    opacity: 0 !important;
+    transition: all 1s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.hero-content.is-exiting {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+    transition: all 0.8s ease;
+}
+
+@keyframes floatStatue {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-18px);
+    }
+}
+
+@keyframes floatStatueReverse {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(18px);
+    }
+}
+
+/* STICKY NAVBAR */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+
+    background: rgba(18, 16, 14, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: var(--border-ornate);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.navbar h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.nav-btn {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 24px;
+    background: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    text-decoration: none;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--accent-gold);
+    z-index: -1;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease;
+}
+
+.nav-btn:hover {
+    color: var(--bg-dark);
+}
+
+.nav-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* HERO SECTION */
+.hero {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+}
+
+/* Vintage Decorative Frame for Hero Content */
+.hero-content {
+    background: rgba(30, 26, 22, 0.7);
+    padding: 60px 80px;
+    border: 2px solid rgba(197, 160, 89, 0.2);
+    border-radius: 4px;
+    box-shadow: var(--shadow-deep);
+    backdrop-filter: blur(5px);
+    position: relative;
+    max-width: 800px;
+    animation: fadeIn 1.5s ease-out;
+}
+
+/* Ornamental Corners */
+.hero-content::before,
+.hero-content::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--accent-gold);
+    opacity: 0.6;
+}
+
+.hero-content::before {
+    top: -10px;
+    left: -10px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.hero-content::after {
+    bottom: -10px;
+    right: -10px;
+    border-left: none;
+    border-top: none;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    font-style: italic;
+}
+
+.cta-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: var(--accent-crimson);
+    color: var(--bg-parchment);
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.cta-btn:hover {
+    background: var(--accent-crimson-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+}
+
+/* ===== INTERACTIVE COLLAGE BACKGROUND ===== */
+.interactive-collage-bg {
+    position: fixed;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background-image: url('img/grand_archive_collage.png');
+    background-size: cover;
+    background-position: center;
+    z-index: -2;
+    filter: brightness(0.35) sepia(0.25) contrast(1.1);
+    transition: transform 0.15s ease-out;
+    /* Smooth hover interaction */
+    pointer-events: none;
+    will-change: transform;
+}
+
+body.landing .interactive-collage-bg {
+    filter: brightness(0.45) sepia(0.2);
+}
+
+/* ===== HIGH-PERFORMANCE LIBRARY ENTRANCE MOTION ===== */
+.library-body {
+    background-color: #000;
+}
+
+/* 
+  1. Cinematic Shutter Reveal
+  This is the black overlay that slides up. We use "transform" instead of "top" 
+  because transform is processed by the computer's GPU, making the motion silky smooth and fast. 
+*/
+.shutter-reveal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #12100e;
+    z-index: 9999;
+    pointer-events: none;
+    transform: translateY(0);
+    /* 
+      "cubic-bezier" is a math curve the browser uses to decide speed.
+      This specific curve (0.9, 0, 0.1, 1) means it starts slow, accelerates fast, and eases at the very end.
+    */
+    transition: transform 1.2s cubic-bezier(0.9, 0, 0.1, 1);
+}
+
+.library-body.is-ready .shutter-reveal {
+    /* Slide it 100% of its height upwards, revealing the page */
+    transform: translateY(-100%);
+}
+
+/* 
+  2. Reveal Items (staggered entry)
+  This controls how the header, search bar, and books "arrive" on the page. 
+  Initially, they are invisible (opacity 0), pushed down (translateY 40px), shrunk (scale 0.95), and blurry.
+*/
+.reveal-item {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    filter: blur(10px);
+    /* 
+      This transition uses a different cubic-bezier curve that 'overshoots' value 1.
+      This creates a physical, bouncy 'spring' effect when the items land in place.
+    */
+    transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reveal-item.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+}
+
+/* Staggered Precision Delays */
+.delay-1 {
+    transition-delay: 0.1s;
+}
+
+.delay-2 {
+    transition-delay: 0.2s;
+}
+
+.delay-3 {
+    transition-delay: 0.3s;
+}
+
+.delay-4 {
+    transition-delay: 0.4s;
+}
+
+.delay-5 {
+    transition-delay: 0.5s;
+}
+
+/* Background zoom-in effect */
+.interactive-collage-bg {
+    transform: scale(1.3);
+    transition: transform 2s cubic-bezier(0.2, 0.8, 0.2, 1), filter 1s ease;
+}
+
+.library-body.is-ready .interactive-collage-bg {
+    transform: scale(1.05);
+    /* Settles into place */
+}
+
+/* ===== 3-TIER ARCHIVAL HEADER ===== */
+/* ===== GLASSMORPHISM HEADERS ===== */
+.library-header, .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(18, 16, 14, 0.8) !important;
+    backdrop-filter: blur(15px) !important;
+    border-bottom: 2px solid var(--accent-gold);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+    padding: 0;
+}
+
+/* Tier 1: Utility Bar (Bootstrap Navbar) */
+.archival-nav-top {
+    border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.back-link-archival {
+    font-family: var(--font-heading);
+    color: var(--text-primary) !important;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.back-link-archival:hover {
+    color: var(--accent-gold) !important;
+    transform: translateX(-5px);
+}
+
+.back-sym {
+    color: var(--accent-gold);
+    font-size: 1.3rem;
+}
+
+.pfp-container {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+    position: relative;
+    background: rgba(40, 35, 30, 0.9);
+}
+
+.pfp-id-text {
+    font-family: var(--font-heading);
+    color: var(--accent-gold);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.pfp-container:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 0 25px rgba(197, 160, 89, 0.6);
+}
+
+/* Page Blur Overlay */
+#pageBlur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+#pageBlur.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Premium Profile Card */
+.profile-card {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 320px;
+    background: rgba(30, 26, 22, 0.95);
+    backdrop-filter: blur(20px);
+    border: 2px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 2rem;
+    z-index: 2001;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+    transform: scale(0.9) translateX(50px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.profile-card.active {
+    transform: scale(1) translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.profile-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.close-profile-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #8b0000;
+    border: 1px solid var(--accent-gold);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.close-profile-btn:hover {
+    background: #ff0000;
+    transform: rotate(90deg) scale(1.1);
+}
+
+.profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-gold);
+    margin-bottom: 1rem;
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(40, 35, 30, 0.9);
+}
+
+.avatar-large-text {
+    font-family: var(--font-heading);
+    color: var(--accent-gold);
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.profile-id {
+    font-family: var(--font-heading);
+    color: var(--accent-gold);
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.profile-role {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.profile-actions {
+    width: 100%;
+    border-top: 1px solid rgba(197, 160, 89, 0.2);
+    padding-top: 1.5rem;
+}
+
+.btn-card-logout {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent-crimson);
+    color: var(--bg-parchment);
+    border: 1px solid var(--accent-gold);
+    border-radius: 4px;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-card-logout:hover {
+    background: var(--accent-crimson-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Tier 2: Display Title */
+.archival-main-title {
+    font-size: clamp(1.5rem, 5vw, 2.8rem);
+    margin: 0;
+    padding: 8px 0;
+    letter-spacing: clamp(2px, 1.5vw, 10px);
+    font-weight: 700;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .archival-main-title {
+        padding: 2px 0;
+        letter-spacing: 1px;
+        font-size: 1.5rem;
+        /* Smaller size on mobile */
+    }
+}
+
+/* Tier 3: Controls Row */
+.archival-select-sm,
+.archival-input-sm {
+    background: var(--bg-parchment) !important;
+    color: var(--text-dark) !important;
+    border: 2px solid var(--text-secondary) !important;
+    font-family: var(--font-mono);
+    height: 48px !important;
+    border-radius: 4px !important;
+    font-size: 1rem !important;
+}
+
+@media (max-width: 768px) {
+
+    .archival-select-sm,
+    .archival-input-sm {
+        height: 44px !important;
+        /* Shorter inputs on mobile */
+        font-size: 0.9rem !important;
+    }
+}
+
+.archival-select-sm:focus,
+.archival-input-sm:focus {
+    border-color: var(--accent-gold) !important;
+    box-shadow: 0 0 15px rgba(197, 160, 89, 0.3) !important;
+}
+
+/* Pinterest-Style Search Dropdown */
+.search-input-group-archival {
+    position: relative;
+    width: 100%;
+}
+
+.suggestions-list-archival {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background: var(--bg-parchment);
+    border: 2px solid var(--accent-gold);
+    border-radius: 6px;
+    list-style: none;
+    padding: 8px 0;
+    margin: 0;
+    z-index: 2000;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+    animation: slideFadeIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transform-origin: top center;
+}
+
+.suggestions-list-archival li {
+    padding: 10px 18px;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.suggestions-list-archival li:last-child {
+    border-bottom: none;
+}
+
+.suggestions-list-archival li:hover,
+.suggestions-list-archival li[aria-selected="true"] {
+    background: rgba(197, 160, 89, 0.15);
+    color: var(--accent-crimson);
+    padding-left: 24px;
+}
+
+.suggestions-list-archival .no-result {
+    color: var(--text-secondary);
+    font-style: italic;
+    text-align: center;
+    padding: 15px;
+}
+
+@keyframes slideFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Social & Cart Integration */
+.social-row-archival {
+    display: flex;
+    gap: 18px;
+    padding-right: 18px;
+    border-right: 1px solid rgba(197, 160, 89, 0.2);
+}
+
+@media (max-width: 768px) {
+    .social-row-archival {
+        border-right: none;
+        padding-right: 0;
+        margin-bottom: 0px;
+    }
+
+    .header-tier-bottom .row {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        /* Allow wrapping on extremely narrow screens to prevent disconnect */
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .header-tier-bottom .col-6 {
+        flex: 1 1 45% !important;
+        /* Equal balance, allowing slight gap */
+        min-width: 0;
+        width: auto !important;
+        max-width: none !important;
+    }
+
+    /* Wrap the social row to the next line */
+    .header-tier-bottom .col-12 {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        margin-top: 10px;
+    }
+
+    .search-input-group-archival {
+        margin: 0;
+    }
+}
+
+.social-link-archival {
+    color: var(--accent-gold);
+    opacity: 0.75;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.social-link-archival svg {
+    width: 20px;
+    height: 20px;
+}
+
+.social-link-archival:hover {
+    opacity: 1;
+    transform: scale(1.2);
+    color: var(--accent-gold-hover);
+}
+
+.premium-cart-btn-archival {
+    background: transparent;
+    border: none;
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+}
+
+.cart-icon-main {
+    font-size: 1.8rem;
+    color: var(--accent-gold);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s ease;
+}
+
+.premium-cart-btn-archival:hover .cart-icon-main {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.cart-badge-archival {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: #8b0000;
+    color: #f5e6d3;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-gold);
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(197, 160, 89, 0.1);
+    background: var(--bg-dark);
+}
+
+/* ===== PAGE SECTIONS & UI BLOCKS ===== */
+
+/* Consolidated with .archival-main-title */
+
+.header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.search-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.search-controls select {
+    font-family: var(--font-mono);
+    background: var(--bg-parchment);
+    color: var(--text-dark);
+    padding: 10px 35px 10px 15px;
+    border: 2px solid var(--text-secondary);
+    border-radius: 6px;
+    font-size: 1rem;
+    min-width: 180px;
+}
+
+@media (max-width: 768px) {
+    .search-controls select {
+        min-width: 0 !important;
+        /* Allow shrinking on mobile */
+    }
+}
+
+.search-wrap {
+    position: relative;
+    z-index: 10000;
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: auto;
+    background: #fff8eb;
+    color: var(--text-dark);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    max-height: 220px;
+    overflow-y: auto;
+    list-style: none;
+    margin: 6px 0 0 0;
+    padding: 6px 0;
+    z-index: 9999;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.suggestions li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggestions li[aria-selected="true"],
+.suggestions li:hover {
+    background: var(--accent-gold-hover);
+    color: var(--bg-dark);
+}
+
+main.container.my-2 #bookContainer .col {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+main.container.my-2 #bookContainer .col:hover {
+    transform: translateY(-5px);
+    /* Lifts the card slightly */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    /* Adds a shadow for depth */
+}
+
+.suggestions .no-result {
+    color: #6b6b6b;
+    cursor: default;
+}
+
+/* Cart button in header */
+.cart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-parchment);
+    border: 1px solid rgba(197, 160, 89, 0.18);
+    color: var(--text-dark);
+    font-size: 1rem;
+    cursor: pointer;
+    position: relative;
+    padding: 8px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.cart-icon {
+    font-size: 1.8rem;
+    transition: transform 0.3s ease;
+}
+
+.premium-cart-btn:hover .cart-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* Compact cart dropdown panel */
+.offcanvas .cart-list {
+    max-height: 320px;
+    overflow: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.offcanvas .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.offcanvas .cart-item .meta {
+    flex: 1 1 auto;
+}
+
+.offcanvas .cart-item .controls {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.offcanvas .cart-item button {
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    background: transparent;
+    cursor: pointer;
+}
+
+.offcanvas .cart-footer {
+    padding: 8px;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* Toast notifications */
+.toast-container {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    z-index: 4000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.toast {
+    background: #1f2933;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 220ms ease, transform 220ms ease;
+    min-width: 180px;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background: linear-gradient(135deg, #2f855a, #48bb78);
+}
+
+.toast.error {
+    background: linear-gradient(135deg, #c53030, #f56565);
+}
+
+.toast.info {
+    background: linear-gradient(135deg, #2b6cb0, #4299e1);
+}
+
+/* Typewriter style input */
+.library-header input {
+    font-family: var(--font-mono);
+    background: var(--bg-parchment);
+    color: var(--text-dark);
+    padding: 9px 15px;
+    width: auto;
+    max-width: 720px;
+    flex: 1 1 auto;
+    border: 2px solid var(--text-secondary);
+    border-radius: 6px;
+    /* softened from harsh 2px default */
+    font-size: 1.1rem;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.library-header input:focus {
+    outline: none;
+    box-shadow: 0 0 15px rgba(197, 160, 89, 0.4), inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-color: var(--accent-gold);
+}
+
+.library-header input::placeholder {
+    /* Bumped contrast for accessibility */
+    color: rgba(44, 36, 27, 0.75);
+}
+
+.back-btn {
+    font-family: var(--font-mono);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-gold);
+    background: rgba(30, 26, 22, 0.7);
+    border: 1px solid var(--accent-gold);
+    text-decoration: none;
+    font-size: clamp(0.75rem, 2vw, 1.1rem);
+    padding: clamp(5px, 1.5vw, 8px) clamp(12px, 3vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+}
+
+.back-btn:hover {
+    background: var(--accent-gold);
+    color: var(--bg-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(197, 160, 89, 0.4);
+}
+
+/* ===== SOCIAL ICONS (library header) ===== */
+.social-icons-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* no margin-top — now sits inline with cart */
+}
+
+/* Right-side cluster: social icons + cart on one line */
+.header-right-cluster {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-gold);
+    opacity: 0.75;
+    transition: opacity 0.25s ease, transform 0.25s ease,
+        filter 0.25s ease;
+    line-height: 0;
+}
+
+.social-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.social-icon:hover {
+    opacity: 1;
+    transform: translateY(-3px);
+    filter: drop-shadow(0 0 6px rgba(197, 160, 89, 0.7));
+}
+
+#stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 30px auto;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(18, 16, 14, 0.85) !important;
+    /* Premium Contrast Fix */
+    padding: 18px 30px;
+    border-radius: 4px;
+    border: 1px solid var(--accent-gold);
+    max-width: 600px;
+    box-shadow: var(--shadow-deep);
+    position: relative;
+    z-index: 10;
+}
+
+/* Numbers in stats use a clean sans-serif to feel like live data */
+#stats span {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0;
+}
+
+#bookContainer {
+    /* Use Bootstrap row/cols for layout; keep light padding */
+    padding: 12px 6px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Book Card as an Old Polaroid/Parchment */
+.book-card {
+    background: rgba(30, 26, 22, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    padding: 16px;
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 10px 25px rgba(0, 0, 0, 0.6),
+        inset 0 0 40px rgba(197, 160, 89, 0.05);
+    position: relative;
+    transition: box-shadow 0.4s ease, border-color 0.4s ease !important;
+    border: 2px solid rgba(197, 160, 89, 0.45);
+    border-radius: 8px;
+    min-height: 580px;
+    /* Grand Archive Scale */
+}
+
+@keyframes floatCardHover {
+
+    0%,
+    100% {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(197, 160, 89, 0.15);
+    }
+
+    50% {
+        transform: translateY(-16px);
+        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(197, 160, 89, 0.15);
+    }
+}
+
+div.card.book-card:hover {
+    /* The floating animation takes over */
+    animation: floatCardHover 3s ease-in-out infinite !important;
+    border-color: rgba(197, 160, 89, 0.9);
+    z-index: 10;
+    cursor: pointer;
+}
+
+.book-card img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    filter: sepia(0.3) contrast(1.1) brightness(0.9);
+    background: #110e0c;
+}
+
+.book-content {
+    text-align: center;
+    margin-top: 15px;
+    color: var(--text-primary);
+}
+
+.book-content h3 {
+    font-family: var(--font-heading);
+    color: var(--accent-gold);
+    font-size: 1.3rem;
+    margin: 10px 0 5px 0;
+    line-height: 1.3;
+}
+
+.book-content p {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    margin: 0;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+/* Stock status as a stamped label */
+.book-content p.stock-status {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-style: normal;
+    text-transform: uppercase;
+    margin: 15px auto;
+    padding: 4px 8px;
+    border: 1px dashed rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.low-stock {
+    color: #a85923 !important;
+    border-color: #a85923 !important;
+}
+
+.unavailable {
+    color: #8a2a24 !important;
+    border-color: #8a2a24 !important;
+    text-decoration: line-through;
+}
+
+/* ===== PIN BADGE + BUTTON TO CARD BOTTOM ===== */
+/* Push the stock badge down to absorb all leftover flex space so every card
+   has its badge at the same vertical position regardless of title/author length */
+.card-body.d-flex.flex-column>p.mb-3 {
+    margin-top: auto !important;
+    margin-bottom: 10px !important;
+    text-align: center;
+}
+
+/* The button footer already uses Bootstrap's mt-auto — zero it out now that
+   the stock paragraph above handles the spacing */
+.card-body.d-flex.flex-column>.mt-auto {
+    margin-top: 0 !important;
+}
+
+
+/* ===== STOCK BADGE THEME OVERRIDES ===== */
+/* Available — deep gold text on dark parchment, dashed stamp border */
+.badge.bg-success {
+    background-color: #1e1a16 !important;
+    color: var(--accent-gold) !important;
+    border: 1px dashed var(--accent-gold);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    padding: 5px 10px;
+}
+
+/* Low Stock — warm amber on a slightly lighter dark background */
+.badge.bg-warning {
+    background-color: #231e18 !important;
+    color: #c98a3a !important;
+    border: 1px dashed #c98a3a;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    padding: 5px 10px;
+}
+
+/* Unavailable — muted crimson on dark background */
+.badge.bg-secondary {
+    background-color: #1c1614 !important;
+    color: #8a4040 !important;
+    border: 1px dashed #8a4040;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    padding: 5px 10px;
+    text-decoration: line-through;
+}
+
+
+
+
+
+/* ===== BOOK INFO MODAL ===== */
+.book-info-modal .modal-content {
+    background: #1e1a15;
+    border: 1px solid rgba(197, 160, 89, 0.4);
+    border-radius: 4px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
+}
+
+.book-info-modal .modal-header {
+    background: rgba(197, 160, 89, 0.08);
+    border-bottom: 1px solid rgba(197, 160, 89, 0.25);
+    padding: 18px 24px;
+}
+
+.book-info-modal .modal-title {
+    font-family: var(--font-heading);
+    color: var(--accent-gold);
+    letter-spacing: 2px;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.book-info-modal .info-modal-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+}
+
+.book-info-modal .modal-body {
+    background: #1e1a15;
+    padding: 28px 24px;
+}
+
+.book-info-modal .modal-footer {
+    background: rgba(197, 160, 89, 0.05);
+    border-top: 1px solid rgba(197, 160, 89, 0.2);
+}
+
+/* Cover image inside modal */
+.info-cover-wrap {
+    width: 150px;
+}
+
+.info-cover-img {
+    width: 150px;
+    height: 210px;
+    object-fit: cover;
+    border: 2px solid rgba(197, 160, 89, 0.4);
+    border-radius: 2px;
+    filter: sepia(0.2) contrast(1.1) brightness(0.95);
+    box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.7);
+    transition: filter 0.4s ease;
+}
+
+.info-cover-img:hover {
+    filter: sepia(0) contrast(1.1) brightness(1.05);
+}
+
+/* Text side */
+.info-text-wrap {
+    flex: 1;
+    color: var(--text-primary);
+}
+
+.info-author {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.info-author em {
+    color: var(--accent-gold);
+    font-style: italic;
+}
+
+.info-genre-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent-gold);
+    border: 1px dashed rgba(197, 160, 89, 0.5);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+}
+
+.info-divider {
+    border-color: rgba(197, 160, 89, 0.2);
+    margin: 14px 0;
+}
+
+.info-summary {
+    font-family: var(--font-body);
+    font-size: 1.45rem;
+    line-height: 1.8;
+    color: var(--bg-parchment);
+    font-style: italic;
+    margin: 0;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.25);
+    border-left: 2px solid var(--accent-gold);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Pagination styles - like index cards */
+#pagination {
+    padding: 12px 0;
+}
+
+/* Let Bootstrap provide pagination styling; small theme tweaks */
+.pagination {
+    justify-content: center;
+    gap: 5px;
+}
+
+.pagination .page-link {
+    font-family: var(--font-mono);
+    background-color: rgba(30, 26, 22, 0.7);
+    color: var(--text-primary);
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    border-radius: 4px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.pagination .page-link:hover {
+    background-color: var(--accent-gold);
+    color: var(--bg-dark);
+    border-color: var(--accent-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(197, 160, 89, 0.4);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--accent-gold);
+    color: var(--bg-dark);
+    border-color: var(--accent-gold);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: rgba(30, 26, 22, 0.3);
+    color: rgba(163, 145, 120, 0.5);
+    /* Faded text-secondary */
+    border-color: rgba(197, 160, 89, 0.1);
+    box-shadow: none;
+    transform: none;
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 30px;
+    }
+
+    .hero-content {
+        padding: 40px 30px;
+        margin: 0 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-content p {
+        font-size: 1.1rem;
+    }
+
+    .header-controls {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+        /* Center-align controls on mobile/tablet */
+    }
+
+    .header-right-cluster {
+        width: 100%;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        /* Prevent items from clashing */
+    }
+
+    .back-btn {
+        font-size: 0.85rem;
+        padding: 7px 14px;
+        align-self: center;
+        /* Center return button */
+    }
+
+    #bookContainer {
+        padding: 20px;
+        gap: 30px;
+    }
+}
+
+/* Additional mobile-friendly tweaks */
+@media (max-width: 640px) {
+
+    /* Back button — phone: compact, does NOT stretch full-width */
+    .back-btn {
+        width: auto;
+        max-width: 170px;
+        font-size: 0.78rem;
+        padding: 7px 12px;
+        letter-spacing: 0.5px;
+        justify-content: center;
+    }
+
+    /* Social icons — phone: slightly smaller */
+    .social-icon svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .search-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .search-controls select {
+        width: 100%;
+    }
+
+    .search-wrap {
+        width: 100%;
+    }
+
+    .search-wrap input {
+        width: 100%;
+        padding: 14px 12px;
+        font-size: 1rem;
+    }
+
+    .suggestions {
+        top: 58px;
+    }
+
+    .add-summary {
+        width: 100%;
+    }
+
+    .add-details {
+        padding: 10px;
+    }
+
+    .book-card img {
+        height: 260px;
+    }
+
+    .book-content h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Ensure interactive controls remain comfortably tappable on small screens */
+    .btn,
+    #pagination button {
+        padding: 12px 16px;
+        min-height: 44px;
+        font-size: 1rem;
+    }
+
+    #pagination {
+        padding: 20px;
+    }
+}
+
+/* Modal styles for reservation */
+
+.modal-panel {
+    display: none;
+}
+
+.confirm-panel {
+    max-width: 360px;
+}
+
+/* Reservations panel */
+.reservations-panel {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 12px 20px;
+    border: 1px solid rgba(197, 160, 89, 0.08);
+    background: rgba(30, 26, 22, 0.4);
+    border-radius: 6px;
+}
+
+.reservations-panel h2 {
+    color: var(--accent-gold);
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+}
+
+.reservations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reservation-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: #fff8eb;
+    color: var(--text-dark);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.reservation-item .meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.reservation-item .meta .title {
+    font-weight: 700;
+}
+
+.reservation-item .meta .due {
+    color: #6b6b6b;
+    font-size: 0.95rem;
+}
+
+.reservation-item button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.reservation-item .btn-cancel-res {
+    background: var(--accent-crimson);
+    color: var(--bg-parchment);
+}
+
+/* Hide the visible "Current Reservations" block while keeping all JS logic intact.
+   The element remains in the DOM and JavaScript can still read/update it; this
+   rule only prevents it from being shown to users. Remove or comment this rule
+   to make the reservations panel visible again. */
+.reservations-panel,
+#reservationsPanel {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Additional responsive improvements */
+/* Header/search layout: allow wrapping and flexible inputs */
+.header-controls {
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.search-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex: 1 1 400px;
+}
+
+.search-controls select {
+    flex: 0 0 180px;
+    min-width: 120px;
+}
+
+/* Ensure cart badge and panel behave on small screens */
+.cart-btn {
+    padding: 6px 8px;
+}
+
+.cart-count {
+    top: -6px;
+    right: -8px;
+    transform: translateZ(0);
+}
+
+.cart-panel {
+    right: 20px;
+    top: 56px;
+}
+
+/* Make modals and panels fit mobile viewports nicely */
+.modal-panel {
+    max-width: 92vw;
+    margin: 0 4vw;
+}
+
+/* Improve touch targets on small devices */
+button,
+.cart-item button {
+    min-height: 44px;
+}
+
+@media (max-width: 1024px) {
+    .library-header input {
+        max-width: 520px;
+    }
+
+    .book-card img {
+        max-height: 480px;
+    }
+}
+
+@media (max-width: 640px) {
+    .header-controls {
+        padding: 10px 16px;
+    }
+
+    .search-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-controls select {
+        width: 100%;
+    }
+
+    .library-header input {
+        width: 100%;
+        padding: 14px;
+    }
+
+    .cart-panel {
+        left: 10px;
+        right: 10px;
+        width: auto;
+        top: 72px;
+    }
+
+    .cart-panel .cart-list {
+        max-height: 320px;
+    }
+
+    .book-card img {
+        aspect-ratio: 3 / 4;
+        height: auto;
+    }
+
+    .book-content h3 {
+        font-size: 1.05rem;
+    }
+
+    .btn {
+        padding: 12px 14px;
+        font-size: 1rem;
+    }
+
+    #pagination {
+        padding: 20px;
+    }
+}
+
+/* Make the book grid adapt gracefully on very small screens */
+@media (max-width: 380px) {
+    #bookContainer {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 12px;
+    }
+
+    .hero-content h1 {
+        font-size: 1.6rem;
+    }
+}
+
+/* Additional fixes discovered during audit */
+/* Make stats bar responsive and avoid overflow */
+#stats {
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 12px;
+}
+
+#stats span {
+    display: inline-block;
+    min-width: 140px;
+    text-align: center;
+}
+
+/* Improve grid on mid-sized screens */
+@media (min-width: 640px) and (max-width: 900px) {
+    #bookContainer {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 28px;
+        padding: 18px;
+    }
+
+    .book-card img {
+        height: 380px;
+    }
+}
+
+/* Ensure the header h1 shrinks on smaller widths to prevent wrapping into controls */
+.library-header h1 {
+    font-size: clamp(1.4rem, 2.0vw + 1rem, 2.2rem);
+}
+
+/* Ensure reserve button text wraps cleanly and remains tappable */
+.btn {
+    white-space: normal;
+    word-break: keep-all;
+}
+
+/* Tighten card padding on small screens to fit more content */
+.book-card {
+    padding: 12px 12px 20px 12px;
+}
+
+/* Avoid very wide images causing horizontal scroll on some mobile UAs */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Accessibility: increase contrast for small text in cards if needed */
+.book-content p {
+    color: #3d3226;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+    #stats {
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .archival-nav-top {
+        padding: 6px 10px !important;
+    }
+
+    .back-link-archival {
+        font-size: 0.85rem;
+        gap: 6px;
+    }
+
+    .btn-archival-logout {
+        padding: 5px 12px;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+    }
+
+    .archival-main-title {
+        padding: 15px 0 5px;
+    }
+
+    .header-tier-bottom {
+        padding-bottom: 20px !important;
+    }
+}
+
+/* Genre select + search appearance: make them match and behave nicely */
+.header-search .search-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.header-search .search-controls select,
+.header-search .search-controls input {
+    width: 100%;
+    max-width: none;
+    background: var(--bg-parchment);
+    color: var(--text-dark);
+    padding: 10px 12px;
+    border: 2px solid var(--text-secondary);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    box-sizing: border-box;
+}
+
+/* Make the search input expand and the genre select compact */
+.header-search .search-controls input {
+    /* input should take remaining space */
+    flex: 1 1 60%;
+    min-width: 160px;
+    max-width: none;
+}
+
+.header-search .search-controls select {
+    /* keep genre select compact */
+    flex: 0 0 140px;
+    min-width: 100px;
+    max-width: 180px;
+}
+
+/* Strong override to make header controls small regardless of root font-size */
+.library-header .header-search .search-controls input,
+.library-header .header-search .search-controls select {
+    font-size: 1rem !important;
+    padding: 8px 10px !important;
+    height: auto !important;
+    line-height: 1.1 !important;
+}
+
+/* For iPhone SE specifically, force a compact height */
+@media (max-width: 360px) {
+
+    .library-header .header-search .search-controls input,
+    .library-header .header-search .search-controls select {
+        font-size: 0.95rem !important;
+        padding: 6px 8px !important;
+        height: 36px !important;
+    }
+}
+
+#genreSelect,
+.header-search .search-controls select {
+    flex: none !important;
+    display: block !important;
+    width: 170px !important;
+    box-sizing: border-box !important;
+
+    /* Typography & Sizing */
+    font-size: 18px !important;
+    /* Better for mobile zoom prevention */
+    height: 44px !important;
+    /* Slightly taller for better touch targets */
+    padding: 0 15px 0 12px !important;
+    /* Standardized padding */
+    line-height: 1.1 !important;
+
+    /* Visuals */
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background-color: var(--bg-parchment) !important;
+    color: var(--text-dark) !important;
+    border: 2px solid var(--text-secondary) !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+
+    /* Simplified Arrow (SVG is more reliable than gradients) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+    background-size: 12px !important;
+}
+
+/* Fix for overlapping cards below */
+.book-card,
+.harry-potter-container {
+    clear: both;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 360px) {
+
+    #genreSelect,
+    .header-search .search-controls select {
+        height: 34px !important;
+        padding: 6px 8px !important;
+        font-size: 0.95rem !important;
+    }
+}
+
+/* Keep select arrow visible but make control compact */
+.header-search .search-controls select {
+    -webkit-appearance: menulist-button;
+    appearance: menulist-button;
+    background-image: linear-gradient(45deg, transparent 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(135deg, rgba(0, 0, 0, 0.2) 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 34px;
+    /* space for arrow */
+}
+
+@media (max-width: 480px) {
+    .header-search .search-controls {
+        gap: 8px;
+    }
+
+    .header-search .search-controls select,
+    .header-search .search-controls input {
+        padding: 8px 10px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 360px) {
+
+    /* Stack them fully on very narrow devices */
+    .header-search .search-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header-search .search-controls select,
+    .header-search .search-controls input {
+        height: 40px;
+    }
+}
+
+/* Bootstrap-based header sizing overrides: make select compact and input fluid */
+.header-search .row>.col-auto .form-select {
+    width: 140px;
+    /* compact genre select */
+}
+
+.header-search .row>.col .form-control {
+    width: 100%;
+}
+
+/* Ensure suggestion dropdown defaults are sensible; JS will set precise width */
+.position-relative>.suggestions {
+    width: auto;
+    left: 0;
+    right: auto;
+    box-sizing: border-box;
+    min-width: 150px;
+    max-width: 100%;
+}
+
+@media (max-width: 360px) {
+    .header-search .row>.col-auto .form-select {
+        width: 110px;
+    }
+}
+
+/* ===== Vintage theme applied to Bootstrap components ===== */
+/* Make Bootstrap cards look like the old parchment book cards */
+.card.h-100 {
+    background-color: #f7eedf;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+    padding: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45), inset 0 0 30px rgba(139, 115, 85, 0.08);
+    border: 1px solid #d7c9b0;
+    position: relative;
+}
+
+.card.h-100::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: repeating-linear-gradient(45deg, transparent, transparent 4px, #e8dcca 4px, #e8dcca 8px);
+    opacity: 0.5;
+}
+
+.card-img-top {
+    filter: sepia(0.45) contrast(1.05) brightness(0.9);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    object-fit: cover;
+}
+
+.card.h-100 .card-title {
+    font-family: var(--font-heading);
+    color: #1a1512;
+    font-size: 1.05rem;
+}
+
+.card.h-100 .card-text {
+    font-style: italic;
+    color: #4a3c2e;
+}
+
+/* Vintage-styled Bootstrap modal & offcanvas */
+.modal-content {
+    background: var(--bg-parchment);
+    color: var(--text-dark);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+}
+
+.modal-header .modal-title {
+    color: var(--accent-crimson);
+    font-family: var(--font-heading);
+}
+
+.modal-body p {
+    color: #c39658;
+}
+
+
+
+/* ===== SITE FOOTER ===== */
+.site-footer {
+    background: #110e0c;
+    border-top: 1px solid rgba(197, 160, 89, 0.15);
+    padding: 40px 20px;
+    margin-top: 60px;
+    font-family: var(--font-body);
+    position: relative;
+    z-index: 100;
+    clear: both;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.footer-links a {
+    color: var(--accent-gold);
+    text-decoration: none;
+    font-family: var(--font-heading);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.footer-links a:hover {
+    opacity: 1;
+    color: #ffd899;
+}
+
+.footer-copy {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    opacity: 0.5;
+    margin: 0;
+}
+
+.offcanvas {
+    background: var(--bg-parchment);
+    color: var(--text-dark);
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.offcanvas .offcanvas-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* Buttons tuned to vintage palette but keeping Bootstrap behavior */
+.btn-primary {
+    background: var(--accent-crimson) !important;
+    border-color: #4a1914 !important;
+    color: var(--bg-parchment) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background: var(--accent-crimson-hover) !important;
+    border-color: #5b201b !important;
+}
+
+.btn-outline-secondary {
+    color: var(--accent-gold);
+    border-color: rgba(197, 160, 89, 0.18);
+}
+
+/* Keep the vintage header look while using Bootstrap navbar markup */
+.navbar {
+    background: rgba(22, 19, 16, 0.9) !important;
+    border-bottom: var(--border-ornate);
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+}
+
+.navbar-brand {
+    font-family: var(--font-heading);
+    color: var(--accent-gold) !important;
+}
+
+/* Ensure suggestions dropdown keeps parchment look */
+.suggestions {
+    background: #fff8eb;
+    color: var(--text-dark);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ===== LOGIN PAGE ===== */
+.login-section {
+    min-height: calc(100vh - 160px);
+    /* Slightly more room for header/footer */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    /* Increased top/bottom padding to prevent clustering */
+}
+
+.login-box {
+    max-width: 480px !important;
+    /* Slightly wider for better proportions */
+    padding: 60px !important;
+    margin-top: -60px;
+    /* Shifted up as requested */
+}
+
+.login-subtitle {
+    font-size: 1.1rem !important;
+    margin-bottom: 30px !important;
+}
+
+.vintage-input {
+    font-family: var(--font-mono) !important;
+    background: var(--bg-parchment) !important;
+    color: var(--text-dark) !important;
+    border: 2px solid var(--text-secondary) !important;
+    border-radius: 6px !important;
+    padding: 10px 15px !important;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease !important;
+}
+
+.vintage-input:focus {
+    outline: none !important;
+    box-shadow: 0 0 15px rgba(197, 160, 89, 0.4), inset 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+    border-color: var(--accent-gold) !important;
+}
+
+.vintage-input::placeholder {
+    color: rgba(44, 36, 27, 0.6) !important;
+}
+
+.login-form label {
+    color: var(--accent-gold);
+    font-family: var(--font-heading);
+    letter-spacing: 1px;
+}
+
+.forgot-link {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-link:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+/* 
+ * ===== MOTION & INTERACTION ===== 
+ * Scroll reveal, hover transitions, and interaction feedback.
+ */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    visibility: hidden;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.card.h-100 {
+    background: rgba(30, 26, 22, 0.45);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(197, 160, 89, 0.25);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    perspective: 1000px;
+    overflow: hidden;
+    min-height: 480px;
+    /* Reduced min-height for vertical compactness */
+}
+
+.card.h-100:hover {
+    transform: translateY(-12px) rotateX(4deg) rotateY(-2deg);
+    border-color: rgba(197, 160, 89, 0.6);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.6),
+        inset 0 0 25px rgba(197, 160, 89, 0.15);
+}
+
+.card.h-100::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    opacity: 0;
+}
+
+.card.h-100:hover::after {
+    opacity: 1;
+}
+
+.card-img-top {
+    transition: transform 0.6s ease;
+    filter: sepia(0.2) contrast(1.1);
+    height: 380px;
+    /* Scaled up for crystal clear visibility */
+    object-fit: contain;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 12px;
+}
+
+.card.h-100:hover .card-img-top {
+    transform: scale(1.06);
+}
+
+#authBtn {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 20px;
+    background: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+#authBtn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--accent-gold);
+    z-index: -1;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease;
+}
+
+#authBtn:hover {
+    color: var(--bg-dark);
+}
+
+#authBtn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+#authBtn.btn-logout {
+    border-color: var(--accent-crimson);
+    color: var(--accent-crimson);
+}
+
+#authBtn.btn-logout::before {
+    background: var(--accent-crimson);
+}
+
+#authBtn.btn-logout:hover {
+    color: var(--bg-parchment);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* 
+ * ===== ADVANCED MOTION & READABILITY ===== 
+ * 3D Rolling Pillar Transition and Text Clarity
+ */
+
+#bookContainer {
+    perspective: 2000px;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rolling-pillar {
+    animation: rollPillar 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes rollPillar {
+    0% {
+        transform: rotateY(0deg) translateZ(0);
+        opacity: 1;
+    }
+
+    45% {
+        transform: rotateY(-90deg) translateZ(-200px);
+        opacity: 0;
+    }
+
+    55% {
+        transform: rotateY(90deg) translateZ(-200px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: rotateY(0deg) translateZ(0);
+        opacity: 1;
+    }
+}
+
+.card.h-100 {
+    background: rgba(18, 16, 14, 0.92) !important;
+    border: 1px solid rgba(197, 160, 89, 0.35);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+    min-height: 480px !important;
+}
+
+.card-title {
+    color: var(--accent-gold) !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+    font-weight: 700 !important;
+}
+
+.card-text {
+    color: var(--text-primary) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+main.container {
+    overflow: visible !important;
+}
+
+/* 
+ * ===== WOW MODAL ANIMATION ===== 
+ * Pinterest/PPT inspired high-motion transition for modal opening.
+ */
+.book-info-modal.fade .modal-dialog {
+    transform: scale(0.7) rotateY(-20deg) translateY(50px);
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+}
+
+.book-info-modal.show .modal-dialog {
+    transform: scale(1) rotateY(0deg) translateY(0);
+    opacity: 1;
+}
+
+.book-info-modal .modal-content {
+    border: 2px solid var(--accent-gold);
+    box-shadow: 0 0 50px rgba(197, 160, 89, 0.3), var(--shadow-deep);
+}
+
+/* Sequential Reveal Styling */
+.book-info-modal .info-cover-img {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s ease 0.3s;
+}
+
+.book-info-modal.show .info-cover-img {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.book-info-modal .info-text-wrap {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease 0.5s;
+}
+
+.book-info-modal.show .info-text-wrap {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.book-info-modal .info-summary {
+    filter: blur(10px);
+    transition: all 1s ease 0.8s;
+}
+
+.book-info-modal.show .info-summary {
+    filter: blur(0);
+}
+
+/* 
+ * ===== CREATIVE ATMOSPHERE: DUST MOTES ===== 
+ * Floating particles to enhance the "old library" feeling.
+ */
+.dust-motes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.mote {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.15;
+    filter: blur(1px);
+    animation: drift 20s infinite linear;
+}
+
+@keyframes drift {
+    from {
+        transform: translateY(100vh) translateX(0);
+    }
+
+    to {
+        transform: translateY(-10vh) translateX(50px);
+    }
+}
+
+#genreSelect {
+    padding-right: 35px !important;
+    min-width: 160px;
+    background-position: right 12px center;
+}
+
+@media (max-width: 768px) {
+    #genreSelect {
+        min-width: 0 !important;
+        /* Allow shrinking on mobile to fit side-by-side */
+    }
+}
+
+/* adjust the size of the image inside the summary card*/
+.info-cover-img {
+    width: 150px;
+    height: 220px;
+    object-fit: cover;
+    filter: sepia(0.2) contrast(1.1) brightness(0.95);
+    box-shadow: rgba(0, 0, 0, 0.7) 6px 6px 20px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgba(197, 160, 89, 0.4);
+    border-image: initial;
+    border-radius: 2px;
+    transition: filter 0.4s;
+
+
+}
+
+/* ===== LOGOUT NOTIFICATION CARD ===== */
+.logout-notification-card {
+    position: fixed;
+    top: 20px;
+    right: -400px;
+    /* Hidden initially */
+    width: 350px;
+    background: var(--bg-parchment);
+    border: 2px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(197, 160, 89, 0.2);
+    z-index: 9999;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.logout-notification-card.show {
+    transform: translateX(-420px);
+    /* Slide in */
+}
+
+.logout-notification-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: var(--accent-crimson);
+}
+
+.logout-notification-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logout-notification-header .icon {
+    font-size: 1.5rem;
+    color: var(--accent-crimson);
+}
+
+.logout-notification-header h4 {
+    margin: 0;
+    font-family: var(--font-heading);
+    color: var(--text-dark);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.logout-notification-body {
+    font-family: var(--font-mono);
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.logout-notification-footer {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: right;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.logout-notification-card:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(197, 160, 89, 0.4);
+    transform: translateX(-425px) scale(1.02);
+}
+
+.logout-notification-card:active {
+    transform: translateX(-420px) scale(0.98);
+}
+
+/* Animations for interaction */
+@keyframes fadeOutNotification {
+    to {
+        opacity: 0;
+        transform: translateX(-420px) translateY(-20px) scale(0.95);
+    }
+}
+
+.logout-notification-card.fade-out {
+    animation: fadeOutNotification 0.5s forwards ease-in;
+}
+
+/* Signup Hint on Login Page */
+.signup-hint {
+    text-align: center;
+    margin-top: 15px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.signup-hint a {
+    color: maroon;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.signup-hint a:hover {
+    color: #5e0000;
+    /* Darker maroon on hover */
+    text-decoration: underline;
+}
+
+/* ===== LIBRARY PAGE: GOLD INK CLICK RIPPLE ===== */
+/* A glowing gold ring that expands from wherever you click.
+   Injected via JS in library-interactions.js. */
+.click-ripple {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: radial-gradient(circle, rgba(255, 220, 140, 0.7) 0%, rgba(197, 160, 89, 0.3) 50%, transparent 80%);
+    pointer-events: none;
+    z-index: 99997;
+    animation: rippleExpand 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes rippleExpand {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+
+    60% {
+        transform: translate(-50%, -50%) scale(28);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(40);
+        opacity: 0;
+    }
+}
