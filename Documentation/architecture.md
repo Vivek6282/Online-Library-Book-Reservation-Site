@@ -1,13 +1,13 @@
 # 🏛️ Architectural Overview
 
-## Modular jQuery Architecture
-The AJCE Archive utilizes a **Tri-Modular Service Layer** built using jQuery to ensure maximum reliability and maintainability. The core logic is structured into professional, modular services that fulfill specialized roles.
+## Javascript Architecture
+The AJCE Archive utilizes a centralized and modern JavaScript approach to ensure maximum reliability and maintainability.
 
-### 1. AjaxHandler Service
-The **AjaxHandler Service** acts as a centralized "Herald". Its primary responsibility is managing all asynchronous conversations and data exchanges with the PHP backend infrastructure.
+### 1. API Communication
+The system primarily utilizes the modern `fetch` API for asynchronous conversations and data exchanges with the PHP backend infrastructure (e.g., `login.js` and `admin.js`). An `AjaxHandler` utility also exists using jQuery's `$.ajax` as a fallback or alternative for certain requests.
 
-### 2. DomController Service
-The **DomController Service** serves as the "Visual Architect". It is responsible for orchestrating all UI movements, seamlessly integrating visual elements such as golden ripples and error-shaking effects to provide a fluid user experience.
+### 2. DOM Manipulation & UI
+Instead of a dedicated DOM controller service, the UI orchestration is handled directly within the respective page scripts (`login.js`, `admin.js`, etc.). This includes seamlessly integrating visual elements such as background effects and feedback messages to provide a fluid user experience.
 
-### 3. FormValidator Service
-The **FormValidator Service** operates as the strict "Guardian" of the system. It enforces rigorous validation rules, ensuring that only valid and authenticated data—such as proper signatures and IDs—is allowed to enter the permanent record of the archive.
+### 3. Client-Side Validation
+Validation operates directly within the form submission event handlers. It enforces required fields and ensures valid data is present before sending requests to the server, bypassing the need for an external strict "Guardian" service.

@@ -8,6 +8,6 @@ The AJCE Archive incorporates high-performance visual effects designed to bridge
 
 ## 🔐 Security of the High Vault
 Security is fundamentally prioritized to protect the archival integrity:
-- **The "911" Master Access**: A hidden entry protocol dedicated for the High Curator. It actively bypasses traditional hashing purely for emergency archival maintenance and intervention.
-- **Auth Guard**: A robust asynchronous authentication system protected by strong BCrypt hashing.
-- **Intrusion Lockout**: Active security measures providing visual feedback and implementing time-based lockouts upon detecting repeated failed entry attempts.
+- **Default Master Access**: An administrative '911' account is seeded into the database for the High Curator to access the system and manage books and users, with password verification enabled.
+- **Auth Guard**: A robust asynchronous authentication system protected by strong BCrypt hashing (e.g. `auth.php`).
+- **Access Roles**: Specific features are locked to the Admin role (such as adding and deleting books or users), while standard scholars browse and reserve texts.
