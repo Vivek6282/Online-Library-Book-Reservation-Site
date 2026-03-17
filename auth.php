@@ -10,7 +10,6 @@ $action = $_POST['action'] ?? '';
 if ($action === 'login') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
-
     $stmt = $pdo->prepare("SELECT id, full_name, username, password, role FROM users WHERE username = ?");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
