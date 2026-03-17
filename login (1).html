@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Meta tags for proper rendering and mobile responsiveness -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Page title shown in browser tab -->
+  <title>The AJCE Archive - Login</title>
+
+  <!-- Main stylesheet (all visual design lives in css/style.css) -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Elegant Google Font pair chosen to match museum-style aesthetic -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Courier+Prime&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <!-- Glassmorphism Header for Login Page -->
+  <!-- This header stays fixed at the top and provides branding with a premium glass effect -->
+  <header class="login-page-header">
+    <div class="header-content">
+      <!-- Hyperlink wrapping both logo and institucional name for better UX -->
+      <!-- Link title provides the requested 'Grand Virtual Tour' context -->
+      <a href="https://youtu.be/TN1XCXporTI?si=je1VvQR_Y2uNkbG3" target="_blank" class="branding-link" title="Grand Virtual Tour of Ajce Library">
+        <!-- Institution Logo: Updated to use the official jpg source -->
+        <img src="img/collegelogo.jpg" alt="Grand Virtual Tour of Ajce Library" class="header-logo">
+        <!-- Institution Name with premium optimized font -->
+        <span class="college-name">Amal Jyothi College of Engineering</span>
+      </a>
+    </div>
+  </header>
+  <!-- Background Collage Elements -->
+  <div class="collage-bg">
+    <img src="img/statue.png" class="collage-item collage-statue" alt="Vintage Statue">
+    <img src="img/hands.png" class="collage-item collage-hands" alt="Creation of Adam Hands">
+    <img src="img/butterfly.png" class="collage-item collage-butterfly" alt="Vintage Butterfly">
+  </div>
+
+  <!-- Top-level container that holds the centered login card -->
+  <div class="page">
+
+    <!-- Main content area for accessibility -->
+    <main class="main" role="main">
+      <!-- Decorative heading area inspired by museum-style layout -->
+      <section class="intro" aria-label="Library philosophy">
+        <h1 class="intro-title">A Place Where Stories Awaken</h1>
+      </section>
+
+      <!-- Accessible login section -->
+      <section class="login-section" aria-labelledby="login-heading" aria-describedby="login-description">
+        <!-- Login card with glassmorphism and golden frame styling -->
+        <div class="login-card" role="form">
+          <header class="login-header">
+            <h2 id="login-heading" class="login-title">The AJCE Archive Login</h2>
+            <p id="login-description" class="login-description">
+              Authenticate to continue your journey through the virtual
+              stacks.
+            </p>
+          </header>
+
+          <!-- Status message area for success and error feedback -->
+          <div id="login-message" class="login-message" role="alert" aria-live="polite"></div>
+
+          <!-- Actual login form; JS will prevent default page reload -->
+          <form id="login-form" novalidate>
+            <!-- Username field group -->
+            <div class="form-group">
+              <label for="username" class="form-label">Username</label>
+              <div class="input-wrapper">
+                <input type="text" id="username" name="username" class="form-input" autocomplete="username" required
+                  aria-required="true" />
+              </div>
+            </div>
+
+            <!-- Password field group with show/hide toggle -->
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <div class="input-wrapper input-wrapper--password">
+                <input type="password" id="password" name="password" class="form-input" autocomplete="current-password"
+                  required aria-required="true" />
+                <!-- Button used to toggle visibility of password text -->
+                <button type="button" class="toggle-password" aria-label="Show password" aria-pressed="false">
+                  👁
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember me / options row -->
+            <div class="form-row">
+              <label class="checkbox-label">
+                <input type="checkbox" id="remember-me" name="remember-me" class="checkbox-input" />
+                <span class="checkbox-text">Remember me on this device</span>
+              </label>
+
+
+            </div>
+
+            <!-- Login button with spinner and subtle interaction effects -->
+            <button type="submit" id="login-button" class="btn-login" aria-disabled="false">
+              <span class="btn-label">Login</span>
+              <!-- Spinner shown while AJAX request is active -->
+              <span class="btn-spinner" aria-hidden="true" hidden></span>
+            </button>
+
+            <!-- Guest bypass link -->
+            <div class="guest-bypass">
+              <span class="divider-text">or</span>
+              <a href="index.html" id="guest-link" class="link-guest">Continue as Guest</a>
+            </div>
+
+            <div class="signup-hint">
+              <p>New Around here? <a href="#" id="open-signup">Sign up</a></p>
+            </div>
+
+            <!-- Hint text for lockout feedback -->
+            <p id="lockout-info" class="lockout-info" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- Signup Modal Overlay (Hidden by default) -->
+      <section id="signup-overlay" class="signup-overlay" aria-hidden="true">
+        <div class="signup-card">
+          <header class="signup-header">
+            <h2 class="signup-title">Join the Pavilion</h2>
+            <p class="signup-description">Enter your email to begin your journey as a curator.</p>
+          </header>
+
+          <form id="signup-form">
+            <div class="form-group">
+              <label for="signup-name" class="form-label">Full Name</label>
+              <div class="input-wrapper">
+                <input type="text" id="signup-name" class="form-input" placeholder="E.g. Leonardo da Vinci" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="signup-email" class="form-label">Email Address</label>
+              <div class="input-wrapper">
+                <input type="email" id="signup-email" class="form-input" placeholder=" E.g. abc123@gmail.com"
+                  required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="signup-password" class="form-label">Password</label>
+              <div class="input-wrapper input-wrapper--password">
+                <input type="password" id="signup-password" class="form-input" placeholder="Create a strong password"
+                  required />
+                <button type="button" class="toggle-password" aria-label="Show password" aria-pressed="false">
+                  👁
+                </button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="checkbox-label">
+                <input type="checkbox" id="signup-remember" class="checkbox-input" />
+                <span class="checkbox-text">Remember me</span>
+              </label>
+            </div>
+
+            <button type="submit" id="register-button" class="btn-login">
+              <span class="btn-label">Register</span>
+            </button>
+
+            <button type="button" id="close-signup" class="link-guest"
+              style="background:none; border:none; margin-top: 1rem; width: 100%; cursor: pointer;">
+              Return to Login
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 
+    === JAVASCRIPT FILES === 
+    These files control the logic and visual motion. They are loaded at the bottom 
+    with the "defer" attribute so they don't block the HTML from appearing first.
+
+    IMPORTANT FACTORS FOR MOTION:
+    1. HTML Canvas (used in galaxy.js and login-atmosphere.js for particles)
+    2. requestAnimationFrame (a browser tool that runs code 60 times a second for smooth animation)
+    3. CSS Transforms (used in login.js to tilt the card with your mouse)
+  -->
+
+  <!-- Background image slider -->
+  <script src="js/slider.js" defer></script>
+
+  <!-- Main login logic and 3D card tilt -->
+  <script src="js/login.js" defer></script>
+
+  <!-- Deep Space Canvas: Renders the rotating galaxies and stars behind everything -->
+  <script src="js/galaxy.js" defer></script>
+
+  <!-- Atmospheric Polish: Adds the mouse glow, dust motes, and magnetic button pull -->
+  <script src="js/login-atmosphere.js" defer></script>
+</body>
+
+
+</html>
