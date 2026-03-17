@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>The AJCE Archive System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Inline styles for pfp fallback if needed -->
+    <style>
+        .pfp-placeholder {
+            background-color: var(--accent-gold);
+            color: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="library-body">
+
+    <!-- 
+      === 1. ENTRANCE MOTION: THE SHUTTER ===
+      This 'shutter-reveal' acts like a theatre curtain.
+      When the page first loads, it completely covers the screen (it is pure black).
+      JavaScript then adds a CSS class that slides it upwards, revealing the page underneath.
+    -->
+    <div class="shutter-reveal"></div>
+
+    <!-- Background Decoration: floating dust particles and the collage images -->
+    <div class="dust-motes" id="dustMotes"></div>
+    <!-- Interactive Collage Background -->
+    <div class="interactive-collage-bg" id="interactiveCollage"></div>
+
+    <header class="library-header">
+        <!-- 
+          === 2. TIERED ANIMATION: REVEAL ITEMS ===
+          Notice the classes "reveal-item" and "delay-1".
+          JavaScript finds everything with "reveal-item" and fades them in one by one.
+          The "delay" classes control the order they appear.
+        -->
+        <!-- Tier 1: Functional Utility (Bootstrap Navbar) -->
+        <nav class="navbar navbar-expand-lg archival-nav-top py-lg-2 py-1 px-3 reveal-item delay-1">
+            <div class="container-fluid p-0">
+                <a class="navbar-brand back-link-archival" href="index.html">
+                    <span class="back-sym">&#x21A4;</span> Return to The Menu
+                </a>
+                <div class="ms-auto d-flex align-items-center">
+                    <!-- Profile Logo: Premium text-based ID circle -->
+                    <div id="pfpContainer" class="pfp-container" title="View Profile">
+                        <span id="pfpText" class="pfp-id-text">GUEST</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Tier 2: The big branding title in the middle -->
+        <div class="header-tier-middle container text-center mt-lg-2 mt-1 mb-lg-1 mb-0 reveal-item delay-2">
+            <h1 class="archival-main-title">The AJCE Archive</h1>
+        </div>
+
+        <!-- Tier 3: Navigation and search tools -->
+        <div class="header-tier-bottom container pb-lg-3 pb-2 reveal-item delay-3">
+            <div class="row g-1 g-md-3 align-items-center">
+                <!-- Filter -->
+                <div class="col-6 col-md-auto">
+                    <select id="genreSelect" class="form-select archival-select-sm" aria-label="Select genre">
+                        <option value="All">All Genres</option>
+                        <option value="Biography">Biography</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Geography">Geography</option>
+                        <option value="History">History</option>
+                        <option value="Language">Language</option>
+                        <option value="Music">Music</option>
+                        <option value="Non-fiction">Non-fiction</option>
+                        <option value="Survival fiction">Survival fiction</option>
+                    </select>
+                </div>
+                <!-- Search -->
+                <div class="col-6 col-md">
+                    <div class="search-input-group-archival">
+                        <input type="text" id="searchInput" class="form-control archival-input-sm"
+                            placeholder="Search the Archive...">
+                        <ul id="suggestions" class="suggestions-list-archival" role="listbox" hidden aria-hidden="true">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Icons & Cart -->
+                <div class="col-12 col-md-auto">
+                    <div class="d-flex justify-content-center justify-content-md-end align-items-center gap-4">
+                        <div class="social-row-archival">
+                            <a href="#" class="social-link-archival" aria-label="Facebook">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-link-archival" aria-label="Instagram">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                    <circle cx="12" cy="12" r="4.5" />
+                                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                                </svg>
+                            </a>
+                            <a href="#" class="social-link-archival" aria-label="X">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                </svg>
+                            </a>
+                        </div>
+                        <button id="cartBtn" class="premium-cart-btn-archival" aria-label="View reservations">
+                            <span class="cart-icon-main">🛒</span>
+                            <span id="cartCount" class="cart-badge-archival">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="container my-2 reveal-item delay-4">
+        <div id="stats" class="mb-3 d-flex gap-3">
+            <span id="totalBooks" class="me-3"></span>
+            <span id="reservedCount"></span>
+        </div>
+
+
+
+        <!-- This is where all the book cards are generated by JavaScript -->
+        <div id="bookContainer" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"></div>
+        <!-- Pagination controls at the bottom -->
+        <nav id="pagination" aria-label="Books pagination" class="mt-4"></nav>
+    </main>
+
+    <!-- Current reservations (UI only) -->
+    <section id="reservationsPanel" class="reservations-panel">
+        <h2>Current Reservations</h2>
+        <div id="reservationsList">No reservations yet.</div>
+    </section>
+    <!-- Bootstrap Offcanvas for Cart -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartPanel" aria-labelledby="cartPanelLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="cartPanelLabel">Reservations</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <div class="cart-list mb-3" id="cartList"></div>
+            <div class="cart-footer mt-auto text-end">
+                <button id="closeCart" class="btn btn-secondary" data-bs-dismiss="offcanvas">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!--
+     BOOK SUMMARY MODAL
+     This is a popup box that appears when you click a book image.
+     It shows more details like the author and a summary.
+    -->
+    <div class="modal fade book-info-modal" id="bookInfoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="info-modal-label">— From the Stacks —</span>
+                        <span id="infoBookTitle"></span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex gap-4 flex-wrap flex-sm-nowrap">
+                    <div class="info-cover-wrap flex-shrink-0">
+                        <img id="infoBookImg" src="" alt="" class="info-cover-img">
+                    </div>
+                    <div class="info-text-wrap">
+                        <p class="info-author">by <em id="infoBookAuthor"></em></p>
+                        <span class="info-genre-tag" id="infoBookGenre"></span>
+                        <hr class="info-divider">
+                        <p class="info-summary" id="infoBookSummary"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close the Tome</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reservation modal (Bootstrap) -->
+
+    <div class="modal fade" id="reserveModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reserveTitle">Reserve Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="reserveBookName">Select how many days to reserve this book (max 15 days):</p>
+                    <label class="form-label" for="reserveDays">Days</label>
+                    <select id="reserveDays" class="form-select"></select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="confirmReserve" class="btn btn-primary">Confirm</button>
+                    <button type="button" id="cancelReserve" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation modal (Bootstrap) -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmTitle">Please confirm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmMessage">Are you sure?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="confirmYes" class="btn btn-primary">Yes</button>
+                    <button type="button" id="confirmNo" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+    SITE FOOTER
+    Anchors the bottom of the page with standard secondary links (About, Contact, etc.).
+    Designed with a deep, dark parchment look to cleanly end the visual flow.
+-->
+    <footer class="site-footer">
+        <div class="container text-center">
+            <div class="footer-links">
+                <a href="#">About the Archive</a>
+                <a href="#">Contact the Archivist</a>
+                <a href="#">Terms of Access</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 @Ajce Management. All records preserved.</p>
+        </div>
+    </footer>
+
+    <!-- 
+      === BOOTSTRAP JS === 
+      Bootstrap needs this script to make dropdowns and modals work.
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 
+      === CORE LIBRARY LOGIC === 
+      script.js handles searching, filtering, pagination, and the initial page entrance trigger.
+    -->
+    <script src="script.js"></script>
+
+    <!-- 
+      === PREMIUM CLICK EFFECTS === 
+      library-interactions.js handles all the mouse/click physics:
+      - Gold ink ripples on click
+      - Cursor glow trail
+      - 3D card tilts
+      - The dark exit curtain before navigation
+    -->
+    <script src="js/library-interactions.js"></script>
+
+    <!-- Background Blur for Profile Card -->
+    <div id="pageBlur"></div>
+
+    <!-- Premium Profile Card -->
+    <div id="profileCard" class="profile-card">
+        <button id="closeProfile" class="close-profile-btn" title="Close Panel">&times;</button>
+        <div class="profile-card-header">
+            <!-- Large Profile Initial/Text (Replaces statue image) -->
+            <div class="profile-avatar-large">
+                <span id="avatarText" class="avatar-large-text">G</span>
+            </div>
+            <h3 id="profileIdDisplay" class="profile-id">Member #0000</h3>
+            <p id="profileRoleDisplay" class="profile-role">Curator of Knowledge</p>
+        </div>
+        <div class="profile-actions">
+            <!-- Dynamic button: Logout for members, Login for guests -->
+            <button id="logoutBtn" class="btn-card-logout">Exit the Archive</button>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+</body>
+
+</html>
