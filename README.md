@@ -35,7 +35,10 @@ Our engineers have implemented high-performance visual effects that bridge the g
 - **Intrusion Lockout**: Visual feedback and time-based locks for failed entry attempts.
 
 ---
+🚀 Setup
+- ** Using Xampp**: By launching Xampp you will be able to activate our website and try it out as you desire.
 
+  
 ## 🧪 Verified Operations: The Test Ledger
 Below is the record of functional verification performed on the live environment.
 
