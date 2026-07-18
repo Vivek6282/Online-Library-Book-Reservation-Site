@@ -8,12 +8,12 @@ document.addEventListener("DOMContentLoaded", () => {
     loadBooks();
 });
 
-function showTab(tabId) {
+function showTab(tabId, btn) {
     document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     
     document.getElementById(tabId).classList.add('active');
-    event.currentTarget.classList.add('active');
+    if (btn) btn.classList.add('active');
 }
 
 async function loadUsers() {
@@ -25,26 +25,32 @@ async function loadUsers() {
             result = JSON.parse(rawText);
         } catch (e) {
             console.error("Server error raw:", rawText);
-            alert("Database Error! Did you add the 'role' column? See console.");
+            alert("Database Error! Did you run setup.php first? See console.");
             return;
         }
 
         if (result.success) {
             const tbody = document.querySelector('#users-table tbody');
             tbody.innerHTML = '';
-            result.users.forEach(u => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${u.id_no}</td>
-                    <td>${u.full_name}</td>
-                    <td>${u.email}</td>
-                    <td>${u.role}</td>
-                <td class="text-center"><button class="btn-premium-action btn-delete" onclick="deleteUser(${u.id})">Remove</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
+            if (result.users && result.users.length > 0) {
+                result.users.forEach(u => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${u.id_no || u.member_id || '—'}</td>
+                        <td>${u.full_name || '—'}</td>
+                        <td>${u.email}</td>
+                        <td>${u.role}</td>
+                        <td class="text-center">
+                            ${u.role !== 'admin' ? `<button class="btn-premium-action btn-delete" onclick="deleteUser(${u.id})">Remove</button>` : '<em style="color: var(--text-secondary);">Protected</em>'}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No users found.</td></tr>';
+            }
         } else {
-            alert("Error: " + result.error);
+            alert("Error: " + (result.error || result.message));
         }
     } catch (err) {
         alert("Connection failed: " + err.message);
@@ -66,6 +72,8 @@ async function deleteUser(id) {
         const result = await response.json();
         if (result.success) {
             loadUsers(); // Refresh the list after deleting
+        } else {
+            alert("Error: " + (result.error || result.message));
         }
     } catch (err) {
         console.error("Delete failed:", err);
@@ -109,7 +117,7 @@ async function loadBooks() {
                     tbody.appendChild(tr);
                 });
             } else {
-                tbody.innerHTML = '<tr><td colspan="5">No books found in database.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No books found in database.</td></tr>';
             }
         }
     } catch (err) {
@@ -128,9 +136,14 @@ async function addBook() {
         author: document.getElementById('book-author').value,
         genre: document.getElementById('book-genre').value,
         stock: parseInt(document.getElementById('book-stock').value),
-        image: document.getElementById('book-image').value || 'img/default.jpg',
+        image: document.getElementById('book-image').value || 'images/IMG-20260316-WA0045.jpg',
         summary: document.getElementById('book-summary').value
     };
+
+    if (!book.title || !book.author) {
+        alert("Title and Author are required.");
+        return;
+    }
 
     try {
         const response = await fetch('api.php?action=add_book', {
@@ -145,16 +158,25 @@ async function addBook() {
             result = JSON.parse(rawText);
         } catch (e) {
             console.error("Server error raw:", rawText);
-            alert("Database Error! Have you run setup_books.sql in phpMyAdmin?");
+            alert("Database Error! Have you run setup.php?");
             return;
         }
 
         if (result.success) {
             alert("Book added successfully!");
             toggleBookForm();
+            // Clear the form
+            document.getElementById('book-title').value = '';
+            document.getElementById('book-author').value = '';
+            document.getElementById('book-genre').value = '';
+            document.getElementById('book-stock').value = '1';
+            document.getElementById('book-image').value = '';
+            document.getElementById('book-summary').value = '';
             loadBooks();
+            // Reload stats if available
+            if (typeof loadStats === 'function') loadStats();
         } else {
-            alert("Error: " + result.error);
+            alert("Error: " + (result.error || result.message));
         }
     } catch (err) {
         alert("Connection failed: " + err.message);
@@ -177,8 +199,10 @@ async function deleteBook(id) {
 
         if (result.success) {
             loadBooks();
+            // Reload stats if available
+            if (typeof loadStats === 'function') loadStats();
         } else {
-            alert("Error: " + result.error);
+            alert("Error: " + (result.error || result.message));
         }
     } catch (err) {
         alert("Connection failed: " + err.message);

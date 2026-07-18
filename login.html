@@ -9,8 +9,8 @@
   <!-- Page title shown in browser tab -->
   <title>The AJCE Archive - Login</title>
 
-  <!-- Main stylesheet (all visual design lives in css/style.css) -->
-  <link rel="stylesheet" href="css/style.css" />
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="library css/style (1).css" />
 
   <!-- Elegant Google Font pair chosen to match museum-style aesthetic -->
   <link
@@ -26,18 +26,19 @@
       <!-- Hyperlink wrapping both logo and institucional name for better UX -->
       <!-- Link title provides the requested 'Grand Virtual Tour' context -->
       <a href="https://youtu.be/TN1XCXporTI?si=je1VvQR_Y2uNkbG3" target="_blank" class="branding-link" title="Grand Virtual Tour of Ajce Library">
-        <!-- Institution Logo: Updated to use the official jpg source -->
-        <img src="img/collegelogo.jpg" alt="Grand Virtual Tour of Ajce Library" class="header-logo">
+        <!-- Institution Logo -->
+        <img src="images/IMG-20260316-WA0036.jpg" alt="Grand Virtual Tour of Ajce Library" class="header-logo">
         <!-- Institution Name with premium optimized font -->
         <span class="college-name">Amal Jyothi College of Engineering</span>
       </a>
     </div>
   </header>
+
   <!-- Background Collage Elements -->
-  <div class="collage-bg">
-    <img src="img/statue.png" class="collage-item collage-statue" alt="Vintage Statue">
-    <img src="img/hands.png" class="collage-item collage-hands" alt="Creation of Adam Hands">
-    <img src="img/butterfly.png" class="collage-item collage-butterfly" alt="Vintage Butterfly">
+  <div class="collage-bg" id="interactiveLoginBg">
+    <img src="images/IMG-20260316-WA0038.jpg" class="collage-item collage-statue" alt="Vintage Statue">
+    <img src="images/IMG-20260316-WA0040.jpg" class="collage-item collage-hands" alt="Creation of Adam Hands">
+    <img src="images/IMG-20260316-WA0041.jpg" class="collage-item collage-butterfly" alt="Vintage Butterfly">
   </div>
 
   <!-- Top-level container that holds the centered login card -->
@@ -67,12 +68,12 @@
 
           <!-- Actual login form; JS will prevent default page reload -->
           <form id="login-form" novalidate>
-            <!-- Username field group -->
+            <!-- ID No field group -->
             <div class="form-group">
-              <label for="username" class="form-label">Username</label>
+              <label for="login-id-no" class="form-label">ID No.</label>
               <div class="input-wrapper">
-                <input type="text" id="username" name="username" class="form-input" autocomplete="username" required
-                  aria-required="true" />
+                <input type="text" id="login-id-no" name="id_no" class="form-input" autocomplete="username" required
+                  aria-required="true" placeholder="Enter your Member ID" />
               </div>
             </div>
 
@@ -95,8 +96,6 @@
                 <input type="checkbox" id="remember-me" name="remember-me" class="checkbox-input" />
                 <span class="checkbox-text">Remember me on this device</span>
               </label>
-
-
             </div>
 
             <!-- Login button with spinner and subtle interaction effects -->
@@ -127,10 +126,17 @@
         <div class="signup-card">
           <header class="signup-header">
             <h2 class="signup-title">Join the Pavilion</h2>
-            <p class="signup-description">Enter your email to begin your journey as a curator.</p>
+            <p class="signup-description">Enter your details to begin your journey as a curator.</p>
           </header>
 
           <form id="signup-form">
+            <div class="form-group">
+              <label for="signup-id-no" class="form-label">Member ID</label>
+              <div class="input-wrapper">
+                <input type="text" id="signup-id-no" class="form-input" placeholder="E.g. 12345" required />
+              </div>
+            </div>
+
             <div class="form-group">
               <label for="signup-name" class="form-label">Full Name</label>
               <div class="input-wrapper">
@@ -182,24 +188,19 @@
     === JAVASCRIPT FILES === 
     These files control the logic and visual motion. They are loaded at the bottom 
     with the "defer" attribute so they don't block the HTML from appearing first.
-
-    IMPORTANT FACTORS FOR MOTION:
-    1. HTML Canvas (used in galaxy.js and login-atmosphere.js for particles)
-    2. requestAnimationFrame (a browser tool that runs code 60 times a second for smooth animation)
-    3. CSS Transforms (used in login.js to tilt the card with your mouse)
   -->
 
-  <!-- Background image slider -->
-  <script src="js/slider.js" defer></script>
+  <!-- jQuery (REQUIRED by login.js which uses $(...) syntax) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
   <!-- Main login logic and 3D card tilt -->
-  <script src="js/login.js" defer></script>
+  <script src="Javascript/login.js" defer></script>
 
   <!-- Deep Space Canvas: Renders the rotating galaxies and stars behind everything -->
-  <script src="js/galaxy.js" defer></script>
+  <script src="Javascript/galaxy.js" defer></script>
 
   <!-- Atmospheric Polish: Adds the mouse glow, dust motes, and magnetic button pull -->
-  <script src="js/login-atmosphere.js" defer></script>
+  <script src="Javascript/login-atmosphere.js" defer></script>
 </body>
 
 

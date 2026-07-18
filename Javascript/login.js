@@ -97,14 +97,14 @@ $(function() {
                 throw new Error("Invalid server response.");
             }
 
-            if (response.ok) {
+            if (result.success) {
                 $registerBtn.text("Success!").css("background-color", "#4cd137");
                 setTimeout(() => {
                     hideSignup();
                     $registerBtn.prop("disabled", false).text("Register").css("background-color", "");
                 }, 1000);
             } else {
-                alert(result.error || "Registration failed.");
+                alert(result.error || result.message || "Registration failed.");
                 $registerBtn.prop("disabled", false).text("Register");
             }
         } catch (err) {
@@ -131,9 +131,10 @@ $(function() {
             showMessage($loginMessage, "Please enter your ID no. (Required field)");
             return;
         }
-        // Note: Password check is removed here to allow 'Admin' role bypass 
-        // as supported by the backend (api.php). Standard users will still 
-        // be challenged by the server.
+        if (!password) {
+            showMessage($loginMessage, "Please enter your password.");
+            return;
+        }
 
         // Spinner toggle via jQuery
         $loginBtnLabel.hide();
@@ -156,18 +157,20 @@ $(function() {
                 throw new Error("Invalid server response.");
             }
 
-            if (response.ok) {
+            // Check result.success (not response.ok, since auth failures still return JSON)
+            if (result.success) {
                 showMessage($loginMessage, "Access Granted. Redirecting...", false);
                 localStorage.setItem("isLoggedIn", "true");
-                localStorage.setItem("userIdNo", result.user.id_no);
-                localStorage.setItem("userName", result.user.full_name);
+                localStorage.setItem("userId", result.user.id);
+                localStorage.setItem("userIdNo", result.user.id_no || result.user.username);
+                localStorage.setItem("userName", result.user.full_name || result.user.username);
                 localStorage.setItem("userRole", result.user.role || 'user');
 
                 setTimeout(() => {
                     window.location.href = result.user.role === 'admin' ? "admin.html" : "index.html";
                 }, 1000);
             } else {
-                showMessage($loginMessage, result.error || "Authentication failed.");
+                showMessage($loginMessage, result.error || result.message || "Authentication failed.");
                 $loginBtnLabel.show();
                 $loginBtnSpinner.prop("hidden", true);
                 $loginBtn.prop("disabled", false);
